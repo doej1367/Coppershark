@@ -1,0 +1,16 @@
+[
+{
+  "modid": "networkmonitor",
+  "name": "Network Monitor",
+  "description": "A simple diagnostics tool to see things like KeepAlive packets in the Minecraft game output to help with Wirshark network analysis. ",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["doej1367"],
+  "credits": "The Forge and FML guys, for making the example",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
