@@ -1,8 +1,8 @@
 [
 {
-  "modid": "networkmonitor",
-  "name": "Network Monitor",
-  "description": "A simple diagnostics tool to see things like KeepAlive packets in the Minecraft game output to help with Wirshark network analysis. ",
+  "modid": "coppershark",
+  "name": "Coppershark",
+  "description": "A simple diagnostics tool to watch packets and help with Wirshark network analysis.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

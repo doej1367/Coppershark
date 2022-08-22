@@ -1,11 +1,11 @@
-package me.networkanalyzer.eventhandler;
+package me.coppershark.eventhandler;
 
 import io.netty.channel.ChannelDuplexHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.ChannelHandler.Sharable;
-import me.networkanalyzer.main.Main;
+import me.coppershark.main.Main;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S00PacketKeepAlive;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -36,7 +36,8 @@ public class PacketEventHandler extends SimpleChannelInboundHandler<Packet> {
 				System.out.println("KeepAlive: key = " + ((S00PacketKeepAlive) msg).func_149134_c());
 			}
 		} catch (Exception e) {
-		} // try catch to ensure the following line is always executed
-		ctx.fireChannelRead(msg);
+		} finally {
+			ctx.fireChannelRead(msg);
+		}
 	}
 }
