@@ -6,6 +6,7 @@ import me.coppershark.command.CopperSharkCommand;
 import me.coppershark.eventhandler.ConnectionExceptionEventHandler;
 import me.coppershark.util.DiscordWebhook;
 import me.coppershark.util.TraceRoute;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.NetworkManager;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
@@ -16,7 +17,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main {
 	public static final String MODID = "coppershark";
-	public static final String VERSION = "2.2.1";
+	public static final String VERSION = "2.2.2";
 
 	private byte[] tokenBadConnection = { 107, 67, 90, 100, 122, 51, 77, 52, 55, 53, 118, 49, 97, 45, 84, 55, 66, 107,
 			83, 85, 56, 120, 117, 102, 107, 81, 117, 90, 87, 110, 78, 118, 86, 88, 85, 99, 90, 76, 53, 110, 121, 80,
@@ -31,6 +32,7 @@ public class Main {
 
 	private long timestamp;
 	private String serverIP;
+	private String userName;
 	private NetworkManager serverState;
 	private TraceRoute traceroute;
 
@@ -59,6 +61,7 @@ public class Main {
 	}
 
 	public void setServerIP(String serverIP) {
+		this.userName = Minecraft.getMinecraft().thePlayer.getName();
 		this.serverIP = serverIP;
 		final String tmp = serverIP;
 		new Thread() {
@@ -69,6 +72,10 @@ public class Main {
 					traceroute.getRoute().remove(0);
 			};
 		}.start();
+	}
+
+	public String getUserName() {
+		return userName;
 	}
 
 	public boolean getServerState() {
