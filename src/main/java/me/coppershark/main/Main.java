@@ -44,6 +44,7 @@ public class Main {
 	public void init(FMLInitializationEvent event) {
 		ClientCommandHandler.instance.registerCommand(new CopperSharkCommand(this));
 		MinecraftForge.EVENT_BUS.register(new ConnectionExceptionEventHandler(this));
+		this.userName = Minecraft.getMinecraft().getSession().getUsername();
 		System.out.println("[OK] registered events");
 		System.out.println("[OK] init Minecraft Coppershark");
 	}
@@ -61,7 +62,6 @@ public class Main {
 	}
 
 	public void setServerIP(String serverIP) {
-		this.userName = Minecraft.getMinecraft().thePlayer.getName();
 		this.serverIP = serverIP;
 		final String tmp = serverIP;
 		new Thread() {
