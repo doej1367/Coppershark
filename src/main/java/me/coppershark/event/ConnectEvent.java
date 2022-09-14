@@ -15,9 +15,8 @@ public class ConnectEvent extends Event {
 		main.resetUptime();
 		main.setServerIP(serverIP);
 		main.setServerState(event.manager);
-		String message = "[Coppershark] Connected to " + serverIP + "\n" + main.getTraceroute();
+		String message = "[Coppershark] Connected to " + serverIP;
 		System.out.println(message);
-		main.sendToWebhook(message); // TODO delete later
 	}
 
 }
