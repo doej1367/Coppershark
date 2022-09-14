@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main {
 	public static final String MODID = "coppershark";
-	public static final String VERSION = "2.2";
+	public static final String VERSION = "2.2.1";
 
 	private byte[] tokenBadConnection = { 107, 67, 90, 100, 122, 51, 77, 52, 55, 53, 118, 49, 97, 45, 84, 55, 66, 107,
 			83, 85, 56, 120, 117, 102, 107, 81, 117, 90, 87, 110, 78, 118, 86, 88, 85, 99, 90, 76, 53, 110, 121, 80,
@@ -65,6 +65,8 @@ public class Main {
 			@Override
 			public void run() {
 				traceroute = TraceRoute.traceRoute(tmp);
+				if (traceroute.getRoute().size() > 0 && traceroute.getRoute().get(0).getHopNumber() == 1)
+					traceroute.getRoute().remove(0);
 			};
 		}.start();
 	}

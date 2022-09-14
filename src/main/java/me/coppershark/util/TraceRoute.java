@@ -45,7 +45,7 @@ public class TraceRoute {
 		final ArrayList<String> route = new ArrayList<String>();
 		try {
 			Process traceRt;
-			String command = os.contains("win") ? "tracert -d -w 100" : "traceroute -n";
+			String command = os.contains("win") ? "tracert -4 -d -w 100" : "traceroute -n";
 			traceRt = Runtime.getRuntime().exec(command + " " + serverIP);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(traceRt.getInputStream()));
 			reader.lines().forEach(new Consumer<String>() {

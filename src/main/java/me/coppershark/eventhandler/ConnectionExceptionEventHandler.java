@@ -51,7 +51,6 @@ public class ConnectionExceptionEventHandler extends ChannelInboundHandlerAdapte
 		});
 	}
 
-	// TODO can this be replaced by ClientDisconnectionFromServerEvent?
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void exceptionCaught(ChannelHandlerContext context, Throwable exception) throws Exception {

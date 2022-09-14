@@ -2,7 +2,7 @@ package me.coppershark.util;
 
 import java.util.ArrayList;
 
-class IPAddress {
+public class IPAddress {
 	private int hopNumber;
 	private String ip;
 	private String name;
@@ -11,6 +11,7 @@ class IPAddress {
 	private int rtt3;
 
 	public IPAddress(String tracertLine) {
+		// TODO 'traceroute' on Linux has a slightly different layout
 		this.hopNumber = Integer.parseInt(tracertLine.substring(0, 3).trim());
 		this.rtt1 = parseRTT(tracertLine.substring(3, 9));
 		this.rtt2 = parseRTT(tracertLine.substring(12, 18));
