@@ -2,7 +2,7 @@
 {
   "modid": "coppershark",
   "name": "Coppershark",
-  "description": "A simple diagnostics tool to watch packets and help with Wirshark network analysis.",
+  "description": "A simple diagnostics tool to watch out for exceptions on the network connection and report them.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
