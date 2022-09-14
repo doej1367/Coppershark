@@ -6,6 +6,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelPipeline;
 import me.coppershark.event.ConnectEvent;
 import me.coppershark.event.ConnectionExceptionEvent;
+import me.coppershark.event.DisconnectEvent;
 import me.coppershark.main.Main;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
@@ -34,6 +35,18 @@ public class ConnectionExceptionEventHandler extends ChannelInboundHandlerAdapte
 			@Override
 			public void run() {
 				MinecraftForge.EVENT_BUS.post(new ConnectEvent(main, event));
+			}
+		});
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void connect(final FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+		final IThreadListener mainThread = Minecraft.getMinecraft();
+		mainThread.addScheduledTask(new Runnable() {
+			@Override
+			public void run() {
+				MinecraftForge.EVENT_BUS.post(new DisconnectEvent(main, event));
 			}
 		});
 	}

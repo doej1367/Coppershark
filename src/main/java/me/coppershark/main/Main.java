@@ -16,16 +16,27 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main {
 	public static final String MODID = "coppershark";
-	public static final String VERSION = "2.1";
+	public static final String VERSION = "2.2";
 
-	private byte[] token = { 107, 67, 90, 100, 122, 51, 77, 52, 55, 53, 118, 49, 97, 45, 84, 55, 66, 107, 83, 85, 56,
-			120, 117, 102, 107, 81, 117, 90, 87, 110, 78, 118, 86, 88, 85, 99, 90, 76, 53, 110, 121, 80, 116, 72, 54,
-			112, 107, 111, 98, 101, 79, 115, 71, 54, 75, 76, 117, 54, 97, 106, 97, 101, 70, 77, 100, 66, 99, 75 };
-	private DiscordWebhook webhook = new DiscordWebhook("1019383711176851486", token);
+	private byte[] tokenBadConnection = { 107, 67, 90, 100, 122, 51, 77, 52, 55, 53, 118, 49, 97, 45, 84, 55, 66, 107,
+			83, 85, 56, 120, 117, 102, 107, 81, 117, 90, 87, 110, 78, 118, 86, 88, 85, 99, 90, 76, 53, 110, 121, 80,
+			116, 72, 54, 112, 107, 111, 98, 101, 79, 115, 71, 54, 75, 76, 117, 54, 97, 106, 97, 101, 70, 77, 100, 66,
+			99, 75 };
+	private DiscordWebhook webhookBadConnection = new DiscordWebhook("1019383711176851486", tokenBadConnection);
+	private byte[] tokenGoodConnection = { 85, 99, 113, 89, 45, 57, 78, 119, 122, 70, 117, 102, 121, 100, 48, 115, 66,
+			45, 116, 77, 119, 80, 121, 74, 98, 54, 89, 115, 113, 69, 103, 109, 120, 54, 71, 85, 51, 84, 77, 107, 54, 77,
+			112, 77, 122, 87, 107, 104, 79, 81, 66, 119, 78, 98, 49, 72, 54, 65, 74, 114, 89, 83, 110, 80, 97, 45, 84,
+			117 };
+	private DiscordWebhook webhookGoodConnection = new DiscordWebhook("1019465411038826570", tokenGoodConnection);
+
 	private long timestamp;
 	private String serverIP;
 	private NetworkManager serverState;
 	private TraceRoute traceroute;
+
+	public enum Connection {
+		GOOD, BAD
+	};
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -72,11 +83,11 @@ public class Main {
 		return traceroute;
 	}
 
-	public void sendToWebhook(String message) {
+	public void sendToWebhook(String message, Connection type) {
 		try {
-			DiscordWebhook webhook = new DiscordWebhook("1019383711176851486", token);
+			DiscordWebhook webhook = ((type == Connection.BAD) ? webhookBadConnection : webhookGoodConnection);
 			webhook.setUsername("Coppershark");
-			webhook.setContent(("```\n" + message + "\n```").replaceAll("\n","\\\\n"));
+			webhook.setContent(("```\n" + message + "\n```").replaceAll("\n", "\\\\n"));
 			webhook.execute();
 		} catch (IOException e) {
 		}
