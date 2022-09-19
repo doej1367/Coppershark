@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
+import com.google.common.net.InetAddresses;
+
 public class TraceRoute {
 	private static final String os = System.getProperty("os.name").toLowerCase();
 
@@ -20,9 +22,20 @@ public class TraceRoute {
 	public TraceRoute(ArrayList<String> tracertOutput) {
 		route = new ArrayList<IPAddress>();
 		for (String line : tracertOutput)
-			if (line.matches(" [0-9 ]{2}([0-9 \\*<]{6} (ms|  )){3}  [^ ]*( \\[[^ ]*\\])? ?"))
-				route.add(new IPAddress(line));
+			if (line.matches(" [0-9 ]{2}([0-9 \\*<]{6} (ms|  )){3}  [^ ]*( \\[[^ ]*\\])? ?")) {
+				IPAddress address = new IPAddress(line);
+				if (!isPrivateV4Address(address.getIp()))
+					route.add(address);
+			}
 		serverIP = route.size() > 0 ? route.get(route.size() - 1) : null;
+	}
+
+	private boolean isPrivateV4Address(String ip) {
+		int address = InetAddresses.coerceToInteger(InetAddresses.forString(ip));
+		return (((address >>> 24) & 0xFF) == 10)
+				|| ((((address >>> 24) & 0xFF) == 172) && ((address >>> 16) & 0xFF) >= 16
+						&& ((address >>> 16) & 0xFF) <= 31)
+				|| ((((address >>> 24) & 0xFF) == 192) && (((address >>> 16) & 0xFF) == 168));
 	}
 
 	public IPAddress getServerIP() {

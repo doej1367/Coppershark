@@ -63,13 +63,19 @@ public class Main {
 
 	public void setServerIP(String serverIP) {
 		this.serverIP = serverIP;
+		updateTraceroute(true);
+	}
+
+	private void updateTraceroute(final boolean forceUpdate) {
 		final String tmp = serverIP;
 		new Thread() {
 			@Override
 			public void run() {
-				traceroute = TraceRoute.traceRoute(tmp);
-				if (traceroute.getRoute().size() > 0 && traceroute.getRoute().get(0).getHopNumber() == 1)
-					traceroute.getRoute().remove(0);
+				TraceRoute tracert = TraceRoute.traceRoute(tmp);
+				if (tracert.getRoute().size() > 0 && tracert.getRoute().get(0).getHopNumber() == 1)
+					tracert.getRoute().remove(0);
+				if (getServerState() || forceUpdate)
+					traceroute = tracert;
 			};
 		}.start();
 	}
