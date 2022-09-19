@@ -24,7 +24,7 @@ public class TraceRoute {
 		for (String line : tracertOutput)
 			if (line.matches(" [0-9 ]{2}([0-9 \\*<]{6} (ms|  )){3}  [^ ]*( \\[[^ ]*\\])? ?")) {
 				IPAddress address = new IPAddress(line);
-				if (!isPrivateV4Address(address.getIp()))
+				if (address.getHopNumber() > 1 && !isPrivateV4Address(address.getIp()))
 					route.add(address);
 			}
 		serverIP = route.size() > 0 ? route.get(route.size() - 1) : null;

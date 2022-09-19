@@ -72,8 +72,6 @@ public class Main {
 			@Override
 			public void run() {
 				TraceRoute tracert = TraceRoute.traceRoute(tmp);
-				if (tracert.getRoute().size() > 0 && tracert.getRoute().get(0).getHopNumber() == 1)
-					tracert.getRoute().remove(0);
 				if (getServerState() || forceUpdate)
 					traceroute = tracert;
 			};
