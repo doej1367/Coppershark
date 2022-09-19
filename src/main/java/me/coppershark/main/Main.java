@@ -72,7 +72,7 @@ public class Main {
 			@Override
 			public void run() {
 				TraceRoute tracert = TraceRoute.traceRoute(tmp);
-				if (getServerState() || forceUpdate)
+				if (forceUpdate || getServerState())
 					traceroute = tracert;
 			};
 		}.start();

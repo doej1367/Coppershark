@@ -14,7 +14,7 @@ public class ConnectionExceptionEvent extends Event {
 		String uptime = "Uptime: " + main.getUptimeMinutes() + " min\n";
 		String error = "Error: " + exception.getClass().getName() + "\n";
 		TraceRoute traceroute = main.getTraceroute();
-		if (traceroute == null || traceroute.getRoute().size() < 2)
+		if (traceroute == null || traceroute.getRoute().size() < 1)
 			return;
 		String message = version + name + ip + uptime + error + traceroute;
 		System.out.println("[Coppershark]\n" + message);

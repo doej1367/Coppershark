@@ -47,6 +47,13 @@ public class TraceRoute {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof TraceRoute))
+			return false;
+		return toString().equalsIgnoreCase(((TraceRoute) obj).toString());
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < getRoute().size(); i++)
