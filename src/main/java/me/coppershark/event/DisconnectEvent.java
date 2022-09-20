@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 public class DisconnectEvent extends Event {
 
 	public DisconnectEvent(Main main, ClientDisconnectionFromServerEvent event) {
-		ArrayList<TraceRoute> traceroute = TraceRouteDashCam.stopAndReturnRecording();
+		TraceRouteDashCam traceroute = TraceRouteDashCam.stopAndReturnRecording();
 		String version = "Mod Version: " + main.VERSION + "\n";
 		String name = "User: " + main.getUserName() + "\n";
 		String ip = "IP: " + main.getServerIP() + "\n";
@@ -23,7 +23,7 @@ public class DisconnectEvent extends Event {
 			return;
 		String uptime = "Uptime: " + main.getUptimeMinutes() + " min\n";
 		String reason = "Ended: " + event.manager.getExitMessage().getUnformattedText() + "\n";
-		if (traceroute == null || traceroute.size() < 1)
+		if (traceroute == null || traceroute.getTraceroutes().size() < 1)
 			return;
 
 		// TODO analyze traceroute

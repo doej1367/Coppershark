@@ -1,17 +1,29 @@
 package me.coppershark.util;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry.AddCallback;
 
 public class TraceRouteDashCam {
 	private static TraceRouteDashCam record;
-	private static TraceRouteDashCam recordSaved;
 
-	private ArrayList<TraceRoute> cache = new ArrayList<TraceRoute>();
+	private HashSet<TraceRoute> traceroutes = new HashSet<TraceRoute>();
+	private ArrayList<TraceRoute> dashRecords = new ArrayList<TraceRoute>();
 	private Thread queryThread = null;
 	private boolean running = true;
+
+	private TraceRouteDashCam() {
+		super();
+	}
+
+	private TraceRouteDashCam(TraceRouteDashCam trdc) {
+		this.traceroutes = trdc.traceroutes;
+		this.dashRecords = trdc.dashRecords;
+		this.queryThread = trdc.queryThread;
+		this.running = trdc.running;
+	}
 
 	public static void startRecording(final String ip) {
 		record = new TraceRouteDashCam();
@@ -27,6 +39,7 @@ public class TraceRouteDashCam {
 						public void run() {
 							TraceRoute tr = TraceRoute.traceRoute(ip);
 							record.add(tr);
+							record.traceroutes.add(tr);
 						};
 					};
 					threads.add(t);
@@ -51,28 +64,36 @@ public class TraceRouteDashCam {
 		record.queryThread.start();
 	}
 
-	public static ArrayList<TraceRoute> stopAndReturnRecording() {
+	public static TraceRouteDashCam stopAndReturnRecording() {
 		long timestamp = System.currentTimeMillis();
-		recordSaved = record;
+		TraceRouteDashCam recordSaved = new TraceRouteDashCam(record);
 		recordSaved.running = false;
 		try {
-			record.queryThread.join();
+			recordSaved.queryThread.join();
 		} catch (InterruptedException e) {
 		}
 		recordSaved.filter(timestamp);
-		return recordSaved.cache;
+		return recordSaved;
+	}
+
+	public ArrayList<TraceRoute> getDashRecord() {
+		return dashRecords;
+	}
+
+	public HashSet<TraceRoute> getTraceroutes() {
+		return traceroutes;
 	}
 
 	private boolean add(TraceRoute e) {
 		cleanup();
-		return cache.add(e);
+		return dashRecords.add(e);
 	}
 
 	private void cleanup() {
-		if (cache.size() < 200)
+		if (dashRecords.size() < 200)
 			return;
 		long now = System.currentTimeMillis();
-		for (Iterator iterator = cache.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = dashRecords.iterator(); iterator.hasNext();) {
 			TraceRoute tr = (TraceRoute) iterator.next();
 			if ((now - tr.getTimestampEnd()) > 20 * 1000)
 				iterator.remove();
@@ -81,7 +102,7 @@ public class TraceRouteDashCam {
 
 	private void filter(long timestamp) {
 		TraceRoute tr_old = null;
-		for (Iterator iterator = cache.iterator(); iterator.hasNext();) {
+		for (Iterator iterator = dashRecords.iterator(); iterator.hasNext();) {
 			TraceRoute tr = (TraceRoute) iterator.next();
 			if (tr.getTimestampEnd() < timestamp || tr.getTimestampStart() > timestamp || tr.equals(tr_old))
 				iterator.remove();
