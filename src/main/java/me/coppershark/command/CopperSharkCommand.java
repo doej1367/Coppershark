@@ -1,6 +1,7 @@
 package me.coppershark.command;
 
 import me.coppershark.main.Main;
+import me.coppershark.util.TraceRoute;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -27,7 +28,15 @@ public class CopperSharkCommand extends CommandBase {
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		// TODO (placeholder for testing something)
-		Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText("coppershark test command"));
+		new Thread() {
+			@Override
+			public void run() {
+				String ip = "IP: " + main.getServerIP() + "\n";
+				String uptime = "Uptime: " + main.getUptimeMinutes() + " min\n";
+				TraceRoute tracert = TraceRoute.traceRoute(main.getServerIP());
+				System.out.println("[Coppershark] debug command\n" + ip + uptime + tracert);
+			};
+		}.start();
 	}
 
 	@Override
