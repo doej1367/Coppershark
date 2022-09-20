@@ -20,9 +20,12 @@ public class ConnectionExceptionEvent extends Event {
 		if (traceroute == null || traceroute.getDashRecord().size() < 1)
 			return;
 
-		// TODO analyze traceroute
+		// TODO analyze traceroutes
+		ArrayList<TraceRoute> trList = new ArrayList<TraceRoute>(traceroute.getDashRecord());
+		TraceRoute firstTraceroute = trList.get(0);
 
-		String message = version + name + ip + uptime + error + traceroute;
+		String message = version + name + ip + uptime + error + firstTraceroute + "\nTrace Route Count: "
+				+ trList.size();
 		System.out.println("[Coppershark]\n" + message);
 		main.sendToWebhook(message, Connection.BAD);
 	}

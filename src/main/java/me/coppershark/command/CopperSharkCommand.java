@@ -2,6 +2,7 @@ package me.coppershark.command;
 
 import me.coppershark.main.Main;
 import me.coppershark.util.TraceRoute;
+import me.coppershark.util.TraceRouteDashCam;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -33,8 +34,10 @@ public class CopperSharkCommand extends CommandBase {
 			public void run() {
 				String ip = "IP: " + main.getServerIP() + "\n";
 				String uptime = "Uptime: " + main.getUptimeMinutes() + " min\n";
-				TraceRoute tracert = TraceRoute.traceRoute(main.getServerIP());
-				System.out.println("[Coppershark] debug command\n" + ip + uptime + tracert);
+				TraceRouteDashCam tracert = TraceRouteDashCam.stopAndReturnRecording();
+				System.out.println("[Coppershark] debug command\n" + ip + uptime);
+				for (TraceRoute tr : tracert.getDashRecord())
+					System.out.println("[Coppershark] " + tr.toStringOneLineIpsOnly());
 			};
 		}.start();
 	}

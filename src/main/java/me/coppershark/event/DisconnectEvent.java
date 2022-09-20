@@ -26,10 +26,12 @@ public class DisconnectEvent extends Event {
 		if (traceroute == null || traceroute.getTraceroutes().size() < 1)
 			return;
 
-		// TODO analyze traceroute
+		// TODO analyze traceroutes
+		ArrayList<TraceRoute> trList = new ArrayList<TraceRoute>(traceroute.getTraceroutes());
+		TraceRoute firstTraceroute = trList.get(0);
 
-		String message = version + name + ip + uptime + traceroute;
-		System.out.println("[Coppershark]\n" + ip + uptime + reason + traceroute);
+		String message = version + name + ip + uptime + firstTraceroute + "\nTrace Route Count: " + trList.size();
+		System.out.println("[Coppershark]\n" + message);
 		if (event.manager.getExitMessage().getUnformattedText().matches("Quitting"))
 			main.sendToWebhook(message, Connection.GOOD);
 	}
