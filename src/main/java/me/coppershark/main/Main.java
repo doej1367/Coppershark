@@ -35,6 +35,7 @@ public class Main {
 	private String serverIP;
 	private String userName;
 	private NetworkManager serverState;
+	private TraceRouteDashCam trdc;
 
 	public enum Connection {
 		GOOD, BAD
@@ -63,7 +64,8 @@ public class Main {
 
 	public void setServerIP(String serverIP) {
 		this.serverIP = serverIP;
-		TraceRouteDashCam.startRecording(serverIP);
+		this.trdc = new TraceRouteDashCam();
+		trdc.startRecording(serverIP);
 	}
 
 	public String getUserName() {
@@ -78,6 +80,12 @@ public class Main {
 
 	public void setServerState(NetworkManager manager) {
 		serverState = manager;
+	}
+
+	public TraceRouteDashCam stopAndReturnRecording() {
+		TraceRouteDashCam res = trdc;
+		res.stopRecording();
+		return res;
 	}
 
 	public void sendToWebhook(String message, Connection type) {

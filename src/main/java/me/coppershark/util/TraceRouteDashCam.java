@@ -7,39 +7,25 @@ import java.util.Iterator;
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry.AddCallback;
 
 public class TraceRouteDashCam {
-	private static TraceRouteDashCam record;
-
 	private HashSet<TraceRoute> traceroutes = new HashSet<TraceRoute>();
 	private ArrayList<TraceRoute> dashRecords = new ArrayList<TraceRoute>();
 	private Thread queryThread = null;
 	private boolean running = true;
 
-	private TraceRouteDashCam() {
-		super();
-	}
-
-	private TraceRouteDashCam(TraceRouteDashCam trdc) {
-		this.traceroutes = trdc.traceroutes;
-		this.dashRecords = trdc.dashRecords;
-		this.queryThread = trdc.queryThread;
-		this.running = trdc.running;
-	}
-
-	public static void startRecording(final String ip) {
-		record = new TraceRouteDashCam();
-		record.queryThread = new Thread() {
+	public void startRecording(final String ip) {
+		queryThread = new Thread() {
 			ArrayList<Thread> threads = new ArrayList<Thread>();
 
 			@Override
 			public void run() {
-				if (record.running == false)
-					record.running = true;
-				while (record.running) {
+				if (running == false)
+					running = true;
+				while (running) {
 					Thread t = new Thread() {
 						public void run() {
 							TraceRoute tr = TraceRoute.traceRoute(ip);
-							record.add(tr);
-							record.traceroutes.add(tr);
+							add(tr);
+							traceroutes.add(tr);
 						};
 					};
 					threads.add(t);
@@ -61,19 +47,18 @@ public class TraceRouteDashCam {
 					}
 			}
 		};
-		record.queryThread.start();
+		queryThread.start();
 	}
 
-	public static TraceRouteDashCam stopAndReturnRecording() {
+	public void stopRecording() {
 		long timestamp = System.currentTimeMillis();
-		TraceRouteDashCam recordSaved = new TraceRouteDashCam(record);
-		recordSaved.running = false;
+		running = false;
 		try {
-			recordSaved.queryThread.join();
+			if (queryThread != null)
+				queryThread.join();
 		} catch (InterruptedException e) {
 		}
-		recordSaved.filter(timestamp);
-		return recordSaved;
+		filter(timestamp);
 	}
 
 	public ArrayList<TraceRoute> getDashRecord() {
