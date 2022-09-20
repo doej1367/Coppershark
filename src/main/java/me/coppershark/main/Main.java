@@ -6,6 +6,7 @@ import me.coppershark.command.CopperSharkCommand;
 import me.coppershark.eventhandler.ConnectionExceptionEventHandler;
 import me.coppershark.util.DiscordWebhook;
 import me.coppershark.util.TraceRoute;
+import me.coppershark.util.TraceRouteDashCam;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.NetworkManager;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -17,7 +18,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main {
 	public static final String MODID = "coppershark";
-	public static final String VERSION = "2.2.4";
+	public static final String VERSION = "3.0.0";
 
 	private byte[] tokenBadConnection = { 107, 67, 90, 100, 122, 51, 77, 52, 55, 53, 118, 49, 97, 45, 84, 55, 66, 107,
 			83, 85, 56, 120, 117, 102, 107, 81, 117, 90, 87, 110, 78, 118, 86, 88, 85, 99, 90, 76, 53, 110, 121, 80,
@@ -34,7 +35,6 @@ public class Main {
 	private String serverIP;
 	private String userName;
 	private NetworkManager serverState;
-	private TraceRoute traceroute;
 
 	public enum Connection {
 		GOOD, BAD
@@ -63,19 +63,7 @@ public class Main {
 
 	public void setServerIP(String serverIP) {
 		this.serverIP = serverIP;
-		updateTraceroute(true);
-	}
-
-	private void updateTraceroute(final boolean forceUpdate) {
-		final String tmp = serverIP;
-		new Thread() {
-			@Override
-			public void run() {
-				TraceRoute tracert = TraceRoute.traceRoute(tmp);
-				if (forceUpdate || getServerState())
-					traceroute = tracert;
-			};
-		}.start();
+		TraceRouteDashCam.startRecording(serverIP);
 	}
 
 	public String getUserName() {
@@ -90,10 +78,6 @@ public class Main {
 
 	public void setServerState(NetworkManager manager) {
 		serverState = manager;
-	}
-
-	public TraceRoute getTraceroute() {
-		return traceroute;
 	}
 
 	public void sendToWebhook(String message, Connection type) {

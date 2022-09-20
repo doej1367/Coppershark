@@ -3,6 +3,7 @@ package me.coppershark.util;
 import java.util.ArrayList;
 
 public class IPAddress {
+	private long timestamp;
 	private int hopNumber;
 	private String ip;
 	private String name;
@@ -12,6 +13,7 @@ public class IPAddress {
 
 	public IPAddress(String tracertLine) {
 		// TODO 'traceroute' on Linux has a slightly different layout
+		this.timestamp = System.currentTimeMillis();
 		this.hopNumber = Integer.parseInt(tracertLine.substring(0, 3).trim());
 		this.rtt1 = parseRTT(tracertLine.substring(3, 9));
 		this.rtt2 = parseRTT(tracertLine.substring(12, 18));
@@ -42,6 +44,10 @@ public class IPAddress {
 		return Integer.parseInt(tmp);
 	}
 
+	public long getTimestamp() {
+		return timestamp;
+	}
+
 	public int getHopNumber() {
 		return hopNumber;
 	}
@@ -67,6 +73,13 @@ public class IPAddress {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof IPAddress))
+			return false;
+		return getIp().equalsIgnoreCase(((IPAddress) obj).getIp());
+	}
+
+	@Override
 	public String toString() {
 		return formatNumberAndIP();
 	}
@@ -80,4 +93,5 @@ public class IPAddress {
 				? new String(new char[leadingSpaces - text.length()]).replace("\0", " ")
 				: "") + text;
 	}
+
 }
