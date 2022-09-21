@@ -24,9 +24,9 @@ public class ConnectionExceptionEvent extends Event {
 				if (traceroute == null || traceroute.getDashRecord() == null || traceroute.getDashRecord().size() < 1)
 					return;
 
-				// TODO analyze traceroutes
 				ArrayList<TraceRoute> trList = new ArrayList<TraceRoute>(traceroute.getDashRecord());
 				TraceRoute firstTraceroute = trList.get(0);
+				// TODO refine tracert selection
 
 				String message = version + name + ip + uptime + error + firstTraceroute + "\nTrace Route Count: "
 						+ trList.size();
