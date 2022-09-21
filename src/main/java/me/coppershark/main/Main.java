@@ -64,8 +64,6 @@ public class Main {
 
 	public void setServerIP(String serverIP) {
 		this.serverIP = serverIP;
-		this.trdc = new TraceRouteDashCam();
-		trdc.startRecording(serverIP);
 	}
 
 	public String getUserName() {
@@ -82,10 +80,13 @@ public class Main {
 		serverState = manager;
 	}
 
-	public TraceRouteDashCam stopAndReturnRecording() {
-		TraceRouteDashCam res = trdc;
-		res.stopRecording();
-		return res;
+	public TraceRouteDashCam getTraceRouteDashCam() {
+		return trdc;
+	}
+
+	public void restartTraceRouteDashCam() {
+		this.trdc = new TraceRouteDashCam();
+		trdc.startRecording(serverIP);
 	}
 
 	public void sendToWebhook(String message, Connection type) {

@@ -28,19 +28,20 @@ public class CopperSharkCommand extends CommandBase {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-		// TODO (placeholder for testing something)
+		final TraceRouteDashCam traceroute = main.getTraceRouteDashCam();
 		new Thread() {
 			@Override
 			public void run() {
+				traceroute.stopRecording();
 				String ip = "IP: " + main.getServerIP() + "\n";
 				String uptime = "Uptime: " + main.getUptimeMinutes() + " min\n";
-				TraceRouteDashCam tracert = main.stopAndReturnRecording();
 				System.out.println("[Coppershark] debug command\n" + ip + uptime);
-				if (tracert != null)
-					for (TraceRoute tr : tracert.getDashRecord())
-						System.out.println("[Coppershark] " + tr.toStringOneLineIpsOnly());
+				if (traceroute != null)
+					for (TraceRoute tr : traceroute.getDashRecord())
+						System.out.println("[Coppershark] \n" + tr.toStringOneLineIpsOnly());
 			};
 		}.start();
+		main.restartTraceRouteDashCam();
 	}
 
 	@Override

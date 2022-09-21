@@ -22,6 +22,7 @@ public class TraceRoute {
 	}
 
 	public TraceRoute(ArrayList<IPAddress> tracert, long timestamp_start) {
+		this.timestamp_start = timestamp_start;
 		this.timestamp_end = System.currentTimeMillis();
 		route = tracert;
 		serverIP = route.size() > 0 ? route.get(route.size() - 1) : null;

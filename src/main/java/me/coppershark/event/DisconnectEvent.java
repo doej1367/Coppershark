@@ -14,26 +14,33 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnection
 
 public class DisconnectEvent extends Event {
 
-	public DisconnectEvent(Main main, ClientDisconnectionFromServerEvent event) {
-		TraceRouteDashCam traceroute = main.stopAndReturnRecording();
-		String version = "Mod Version: " + main.VERSION + "\n";
-		String name = "User: " + main.getUserName() + "\n";
-		String ip = "IP: " + main.getServerIP() + "\n";
-		if (main.getUptimeMinutes() < 40)
-			return;
-		String uptime = "Uptime: " + main.getUptimeMinutes() + " min\n";
-		String reason = "Ended: " + event.manager.getExitMessage().getUnformattedText() + "\n";
-		if (traceroute == null || traceroute.getTraceroutes() == null || traceroute.getTraceroutes().size() < 1)
-			return;
+	public DisconnectEvent(final Main main, final ClientDisconnectionFromServerEvent event) {
+		new Thread() {
+			@Override
+			public void run() {
+				TraceRouteDashCam traceroute = main.getTraceRouteDashCam();
+				traceroute.stopRecording();
+				String version = "Mod Version: " + main.VERSION + "\n";
+				String name = "User: " + main.getUserName() + "\n";
+				String ip = "IP: " + main.getServerIP() + "\n";
+				if (main.getUptimeMinutes() < 40)
+					return;
+				String uptime = "Uptime: " + main.getUptimeMinutes() + " min\n";
+				String reason = "Ended: " + event.manager.getExitMessage().getUnformattedText() + "\n";
+				if (traceroute == null || traceroute.getTraceroutes() == null || traceroute.getTraceroutes().size() < 1)
+					return;
 
-		// TODO analyze traceroutes
-		ArrayList<TraceRoute> trList = new ArrayList<TraceRoute>(traceroute.getTraceroutes());
-		TraceRoute firstTraceroute = trList.get(0);
+				// TODO analyze traceroutes
+				ArrayList<TraceRoute> trList = new ArrayList<TraceRoute>(traceroute.getTraceroutes());
+				TraceRoute firstTraceroute = trList.get(0);
 
-		String message = version + name + ip + uptime + firstTraceroute + "\nTrace Route Count: " + trList.size();
-		System.out.println("[Coppershark]\n" + message);
-		if (event.manager.getExitMessage().getUnformattedText().matches("Quitting"))
-			main.sendToWebhook(message, Connection.GOOD);
+				String message = version + name + ip + uptime + firstTraceroute + "\nTrace Route Count: "
+						+ trList.size();
+				System.out.println("[Coppershark]\n" + message);
+				if (event.manager.getExitMessage().getUnformattedText().matches("Quitting"))
+					main.sendToWebhook(message, Connection.GOOD);
+			};
+		}.start();
 	}
 
 }

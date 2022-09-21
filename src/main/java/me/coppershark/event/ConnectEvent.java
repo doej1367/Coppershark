@@ -14,6 +14,7 @@ public class ConnectEvent extends Event {
 		String serverIP = event.isLocal ? "localhost" : serverData != null ? serverData.serverIP : null;
 		main.resetUptime();
 		main.setServerIP(serverIP);
+		main.restartTraceRouteDashCam();
 		main.setServerState(event.manager);
 		String message = "[Coppershark] Connected to " + serverIP;
 		System.out.println(message);
