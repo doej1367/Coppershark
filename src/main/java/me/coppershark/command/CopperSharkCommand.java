@@ -33,12 +33,13 @@ public class CopperSharkCommand extends CommandBase {
 			@Override
 			public void run() {
 				traceroute.stopRecording();
-				String ip = "IP: " + main.getServerIP() + "\n";
-				String uptime = "Uptime: " + main.getUptimeMinutes() + " min\n";
-				System.out.println("[Coppershark] debug command\n" + ip + uptime);
-				if (traceroute != null)
-					for (TraceRoute tr : traceroute.getDashRecord())
-						System.out.println("[Coppershark] \n" + tr.toStringOneLineIpsOnly());
+				String ip = "IP: " + main.getServerIP();
+				String uptime = ", Uptime: " + main.getUptimeMinutes() + " min";
+				System.out.println("[Coppershark] debug command " + ip + uptime);
+				if (traceroute != null) {
+					System.out.println("[Coppershark] \n" + traceroute.getClosestTracert());
+					System.out.println("[Coppershark] \n" + traceroute.getMostUsedRoute());
+				}
 			};
 		}.start();
 		main.restartTraceRouteDashCam();

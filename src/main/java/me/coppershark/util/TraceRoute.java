@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.function.Consumer;
 
 public class TraceRoute {
@@ -28,6 +30,16 @@ public class TraceRoute {
 		serverIP = route.size() > 0 ? route.get(route.size() - 1) : null;
 	}
 
+	public TraceRoute(IPAddress serverIP, IPAddress[] tracert, long timestamp_start, long timestamp_end) {
+		this.timestamp_start = timestamp_start;
+		this.timestamp_end = timestamp_end;
+		route = new ArrayList<IPAddress>();
+		for (IPAddress ipAddress : tracert)
+			if (ipAddress != null)
+				route.add(ipAddress);
+		this.serverIP = serverIP;
+	}
+
 	public long getTimestampStart() {
 		return timestamp_start;
 	}
@@ -49,6 +61,11 @@ public class TraceRoute {
 		for (int i = 0; i < getRoute().size(); i++)
 			sb.append(getRoute().get(i).getIp() + (i == getRoute().size() - 1 ? "" : ";"));
 		return sb.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
 	}
 
 	@Override
@@ -89,7 +106,7 @@ public class TraceRoute {
 				}
 			});
 		} catch (IOException e) {
-			return new TraceRoute();
+			return null;
 		}
 		return new TraceRoute(route, timestamp_start);
 	}

@@ -48,6 +48,18 @@ public class IPAddress {
 		return timestamp;
 	}
 
+	/**
+	 * Gets the time distance from the disconnectTime to this tracert IP address
+	 * from the past. Records from the future (POV disconnectTime) return a negative
+	 * value
+	 * 
+	 * @param disconnectTime - time the disconnect happened
+	 * @return
+	 */
+	public long getDistance(long disconnectTime) {
+		return disconnectTime - timestamp;
+	}
+
 	public int getHopNumber() {
 		return hopNumber;
 	}
@@ -58,6 +70,14 @@ public class IPAddress {
 
 	public String getName() {
 		return name;
+	}
+
+	public int getRttAverage() {
+		int count = (rtt1 >= 0 ? 1 : 0) + (rtt2 >= 0 ? 1 : 0) + (rtt3 >= 0 ? 1 : 0);
+		if (count <= 0)
+			return -1;
+		int rttSum = (rtt1 >= 0 ? rtt1 : 0) + (rtt2 >= 0 ? rtt2 : 0) + (rtt3 >= 0 ? rtt3 : 0);
+		return rttSum / count;
 	}
 
 	public int getRtt1() {
