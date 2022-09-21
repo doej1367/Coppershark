@@ -72,8 +72,8 @@ public class TraceRoute {
 		try {
 			String command = os.contains("win") ? "tracert -4 -d -w 200" : "traceroute -n";
 			Process traceRt = Runtime.getRuntime().exec(command + " " + serverIP);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(traceRt.getInputStream()));
-			reader.lines().forEach(new Consumer<String>() {
+			BufferedReader br = new BufferedReader(new InputStreamReader(traceRt.getInputStream()));
+			br.lines().forEach(new Consumer<String>() {
 				IPAddress previousAddress = null;
 
 				@Override

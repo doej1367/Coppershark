@@ -11,6 +11,10 @@ public class TraceRouteDashCam {
 	private ArrayList<TraceRoute> dashRecords = new ArrayList<TraceRoute>();
 	private Thread queryThread = null;
 	private boolean running = true;
+	private boolean stopped = false;
+	private final Object lockCleanup = new Object();
+	private final Object lockStopping = new Object();
+	private final Object lockIterator = new Object();
 
 	public void startRecording(final String ip) {
 		queryThread = new Thread() {
@@ -51,14 +55,28 @@ public class TraceRouteDashCam {
 	}
 
 	public void stopRecording() {
-		long timestamp = System.currentTimeMillis();
-		running = false;
-		try {
-			if (queryThread != null)
-				queryThread.join();
-		} catch (InterruptedException e) {
+		synchronized (lockStopping) {
+			if (stopped == false) {
+				long timestamp = System.currentTimeMillis();
+				running = false;
+				try {
+					if (queryThread != null)
+						queryThread.join();
+				} catch (InterruptedException e) {
+				}
+				synchronized (lockIterator) {
+					TraceRoute tr_old = null;
+					for (Iterator iterator = dashRecords.iterator(); iterator.hasNext();) {
+						TraceRoute tr = (TraceRoute) iterator.next();
+						if (tr.getTimestampEnd() < timestamp || tr.getTimestampStart() > timestamp || tr.equals(tr_old))
+							iterator.remove();
+						else
+							tr_old = tr;
+					}
+				}
+			}
+			stopped = true;
 		}
-		filter(timestamp);
 	}
 
 	public ArrayList<TraceRoute> getDashRecord() {
@@ -75,24 +93,18 @@ public class TraceRouteDashCam {
 	}
 
 	private void cleanup() {
-		if (dashRecords.size() < 200)
-			return;
-		long now = System.currentTimeMillis();
-		for (Iterator iterator = dashRecords.iterator(); iterator.hasNext();) {
-			TraceRoute tr = (TraceRoute) iterator.next();
-			if ((now - tr.getTimestampEnd()) > 20 * 1000)
-				iterator.remove();
+		synchronized (lockCleanup) {
+			if (dashRecords.size() < 200)
+				return;
+			long now = System.currentTimeMillis();
+			synchronized (lockIterator) {
+				for (Iterator iterator = dashRecords.iterator(); iterator.hasNext();) {
+					TraceRoute tr = (TraceRoute) iterator.next();
+					if ((now - tr.getTimestampEnd()) > 20 * 1000)
+						iterator.remove();
+				}
+			}
 		}
 	}
 
-	private void filter(long timestamp) {
-		TraceRoute tr_old = null;
-		for (Iterator iterator = dashRecords.iterator(); iterator.hasNext();) {
-			TraceRoute tr = (TraceRoute) iterator.next();
-			if (tr.getTimestampEnd() < timestamp || tr.getTimestampStart() > timestamp || tr.equals(tr_old))
-				iterator.remove();
-			else
-				tr_old = tr;
-		}
-	}
 }

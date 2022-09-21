@@ -18,6 +18,8 @@ public class DisconnectEvent extends Event {
 		new Thread() {
 			@Override
 			public void run() {
+				if (!event.manager.getExitMessage().getUnformattedText().matches("Quitting"))
+					return;
 				TraceRouteDashCam traceroute = main.getTraceRouteDashCam();
 				traceroute.stopRecording();
 				String version = "Mod Version: " + main.VERSION + "\n";
@@ -37,8 +39,7 @@ public class DisconnectEvent extends Event {
 				String message = version + name + ip + uptime + lastTraceroute + "\nTrace Route Count: "
 						+ trList.size();
 				System.out.println("[Coppershark]\n" + message);
-				if (event.manager.getExitMessage().getUnformattedText().matches("Quitting"))
-					main.sendToWebhook(message, Connection.GOOD);
+				main.sendToWebhook(message, Connection.GOOD);
 			};
 		}.start();
 	}
