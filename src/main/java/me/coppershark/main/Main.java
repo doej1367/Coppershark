@@ -5,6 +5,7 @@ import java.io.IOException;
 import me.coppershark.command.CopperSharkCommand;
 import me.coppershark.eventhandler.ConnectionExceptionEventHandler;
 import me.coppershark.util.DiscordWebhook;
+import me.coppershark.util.Settings;
 import me.coppershark.util.TraceRoute;
 import me.coppershark.util.TraceRouteDashCam;
 import net.minecraft.client.Minecraft;
@@ -14,6 +15,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main {
@@ -36,10 +38,21 @@ public class Main {
 	private String userName;
 	private NetworkManager serverState;
 	private TraceRouteDashCam trdc;
+	private Settings settings;
+	private String discordUserID = "default";
 
 	public enum Connection {
 		GOOD, BAD
 	};
+
+	@EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+		settings = new Settings(this);
+		settings.setFolder(event);
+		settings.createSettingsFolderAndFile();
+		discordUserID = settings.getSetting("discordUserID");
+		System.out.println("[OK] preInit Minecraft Coppershark");
+	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -89,11 +102,16 @@ public class Main {
 		trdc.startRecording(serverIP);
 	}
 
+	public Settings getSettings() {
+		return settings;
+	}
+
 	public void sendToWebhook(String message, Connection type) {
 		try {
+			String discordHandle = discordUserID.equalsIgnoreCase("default") ? "" : ("<@" + discordUserID + ">\n");
 			DiscordWebhook webhook = ((type == Connection.BAD) ? webhookBadConnection : webhookGoodConnection);
 			webhook.setUsername("Coppershark");
-			webhook.setContent(("```\n" + message + "\n```").replaceAll("\n", "\\\\n"));
+			webhook.setContent((discordUserID + "```\n" + message + "\n```").replaceAll("\n", "\\\\n"));
 			webhook.execute();
 		} catch (IOException e) {
 		}
