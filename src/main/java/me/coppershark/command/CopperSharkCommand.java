@@ -23,7 +23,7 @@ public class CopperSharkCommand extends CommandBase {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "coppershark test command";
+		return "coppershark commands";
 	}
 
 	@Override
@@ -32,6 +32,8 @@ public class CopperSharkCommand extends CommandBase {
 			return;
 		else if (args.length > 1 && args[0].equalsIgnoreCase("setDiscordId") && args[1].matches("[0-9]{18}")) {
 			main.getSettings().putSetting("discordUserID", args[1]);
+			Minecraft.getMinecraft().thePlayer
+					.addChatMessage(new ChatComponentText("Coppershark > Discord user id validated and saved!"));
 		} else if (args[0].equalsIgnoreCase("debug")) {
 			final TraceRouteDashCam traceroute = main.getTraceRouteDashCam();
 			new Thread() {
