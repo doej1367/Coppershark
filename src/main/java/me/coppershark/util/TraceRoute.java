@@ -34,9 +34,12 @@ public class TraceRoute {
 		this.timestamp_start = timestamp_start;
 		this.timestamp_end = timestamp_end;
 		route = new ArrayList<IPAddress>();
+		IPAddress previous = null;
 		for (IPAddress ipAddress : tracert)
-			if (ipAddress != null)
+			if (ipAddress != null && !ipAddress.equals(previous)) {
 				route.add(ipAddress);
+				previous = ipAddress;
+			}
 		this.serverIP = serverIP;
 	}
 
