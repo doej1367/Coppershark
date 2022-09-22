@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -50,7 +51,7 @@ public class Settings {
 			return cached;
 		try {
 			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(new FileInputStream(settingsFile), "UTF_8"));
+					new InputStreamReader(new FileInputStream(settingsFile), Charset.forName("UTF-8")));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if (line.isEmpty() || !line.contains(":") || line.split(":")[0].length() <= 0)
@@ -58,7 +59,8 @@ public class Settings {
 				if (line.split(":")[0].equalsIgnoreCase(setting))
 					return line.split(":").length > 1 ? line.split(":")[1] : "";
 			}
-		} catch (IOException ignored) {
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 		return "default";
 	}
@@ -69,7 +71,7 @@ public class Settings {
 		BufferedReader reader;
 		try {
 			reader = new BufferedReader(
-					new InputStreamReader(new FileInputStream(settingsFile), StandardCharsets.UTF_8));
+					new InputStreamReader(new FileInputStream(settingsFile), Charset.forName("UTF-8")));
 			String line;
 			while ((line = reader.readLine()) != null) {
 				if (line.isEmpty() || !line.contains(":") || line.split(":")[0].length() <= 0)

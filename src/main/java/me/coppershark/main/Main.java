@@ -20,7 +20,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main {
 	public static final String MODID = "coppershark";
-	public static final String VERSION = "3.0.6";
+	public static final String VERSION = "3.0.7";
 
 	private byte[] tokenBadConnection = { 107, 67, 90, 100, 122, 51, 77, 52, 55, 53, 118, 49, 97, 45, 84, 55, 66, 107,
 			83, 85, 56, 120, 117, 102, 107, 81, 117, 90, 87, 110, 78, 118, 86, 88, 85, 99, 90, 76, 53, 110, 121, 80,
@@ -39,7 +39,6 @@ public class Main {
 	private NetworkManager serverState;
 	private TraceRouteDashCam trdc;
 	private Settings settings;
-	private String discordUserID = "default";
 
 	public enum Connection {
 		GOOD, BAD
@@ -50,7 +49,6 @@ public class Main {
 		settings = new Settings(this);
 		settings.setFolder(event);
 		settings.createSettingsFolderAndFile();
-		discordUserID = settings.getSetting("discordUserID");
 		System.out.println("[OK] preInit Minecraft Coppershark");
 	}
 
@@ -108,7 +106,8 @@ public class Main {
 
 	public void sendToWebhook(String message, Connection type) {
 		try {
-			String discordHandle = discordUserID.equalsIgnoreCase("default") ? "" : ("<@" + discordUserID + ">\n");
+			String discordID = settings.getSetting("discordUserID");
+			String discordHandle = discordID.equalsIgnoreCase("default") ? "" : ("<@" + discordID + ">\n");
 			DiscordWebhook webhook = ((type == Connection.BAD) ? webhookBadConnection : webhookGoodConnection);
 			webhook.setUsername("Coppershark");
 			webhook.setContent((discordHandle + "```\n" + message + "\n```").replaceAll("\n", "\\\\n"));
