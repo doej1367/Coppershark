@@ -18,7 +18,8 @@ public class DisconnectEvent extends Event {
 		new Thread() {
 			@Override
 			public void run() {
-				if (!event.manager.getExitMessage().getUnformattedText().matches("Quitting"))
+				if (event.manager == null || event.manager.getExitMessage() == null
+						|| !event.manager.getExitMessage().getUnformattedText().matches("Quitting"))
 					return;
 				TraceRouteDashCam traceroute = main.getTraceRouteDashCam();
 				traceroute.stopRecording();

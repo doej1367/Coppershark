@@ -14,6 +14,8 @@ public class ConnectionExceptionEvent extends Event {
 		new Thread() {
 			@Override
 			public void run() {
+				if (exception.getClass().getName().contains("java.nio.channels.ClosedChannelException"))
+					return;
 				TraceRouteDashCam traceroute = main.getTraceRouteDashCam();
 				traceroute.stopRecording();
 				String version = "Mod Version: " + main.VERSION + "\n";
