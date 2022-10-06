@@ -1,8 +1,6 @@
 package me.coppershark.command;
 
 import me.coppershark.main.Main;
-import me.coppershark.main.Main.Connection;
-import me.coppershark.util.TraceRoute;
 import me.coppershark.util.TraceRouteDashCam;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
@@ -48,7 +46,7 @@ public class CopperSharkCommand extends CommandBase {
 						System.out.println("[Coppershark] \n" + traceroute.getClosestTracert());
 						System.out.println("[Coppershark] \n" + traceroute.getMostUsedRoute());
 					}
-				};
+				}
 			}.start();
 			main.restartTraceRouteDashCam();
 		}

@@ -9,7 +9,6 @@ import me.coppershark.event.ConnectionExceptionEvent;
 import me.coppershark.event.DisconnectEvent;
 import me.coppershark.main.Main;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.util.IThreadListener;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

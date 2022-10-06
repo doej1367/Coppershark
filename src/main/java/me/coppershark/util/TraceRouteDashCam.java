@@ -1,7 +1,6 @@
 package me.coppershark.util;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,6 +10,7 @@ public class TraceRouteDashCam {
 	private HashMap<TraceRoute, Long> routeList = new HashMap<TraceRoute, Long>();
 	private HashSet<TraceRoute> traceroutes = new HashSet<TraceRoute>();
 	private ArrayList<TraceRoute> dashRecords = new ArrayList<TraceRoute>();
+	private String serverIP = null;
 	private TraceRoute closestTracert = null;
 	private Thread queryThread = null;
 	private boolean running = true;
@@ -21,15 +21,17 @@ public class TraceRouteDashCam {
 	private final Object lockIterator = new Object();
 
 	public void startRecording(final String ip) {
+		serverIP = ip;
 		queryThread = new Thread() {
 			ArrayList<Thread> threads = new ArrayList<Thread>();
 
 			@Override
 			public void run() {
-				if (running == false)
+				if (!running)
 					running = true;
 				while (running) {
 					Thread t = new Thread() {
+						@Override
 						public void run() {
 							TraceRoute tr = TraceRoute.traceRoute(ip);
 							if (tr != null) {
@@ -40,7 +42,7 @@ public class TraceRouteDashCam {
 								int l = tr.getRoute().get(tr.getRoute().size() - 1).getHopNumber();
 								longestRoute = l > longestRoute ? l : longestRoute;
 							}
-						};
+						}
 					};
 					threads.add(t);
 					t.start();
@@ -66,7 +68,7 @@ public class TraceRouteDashCam {
 
 	public void stopRecording() {
 		synchronized (lockStopping) {
-			if (stopped == false) {
+			if (!stopped) {
 				long timestamp = System.currentTimeMillis();
 				try {
 					Thread.sleep(200);
@@ -114,9 +116,7 @@ public class TraceRouteDashCam {
 							: timestampStart;
 					timestampEnd = ipAddress.getTimestamp() > timestampEnd ? ipAddress.getTimestamp() : timestampEnd;
 				}
-				this.closestTracert = new TraceRoute(
-						dashRecords.get(0) == null ? null : dashRecords.get(0).getServerIP(), closestTracertParts,
-						timestampStart, timestampEnd);
+				this.closestTracert = new TraceRoute(serverIP, closestTracertParts, timestampStart, timestampEnd);
 			}
 			stopped = true;
 		}

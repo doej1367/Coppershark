@@ -18,7 +18,7 @@ public class ConnectionExceptionEvent extends Event {
 					return;
 				TraceRouteDashCam traceroute = main.getTraceRouteDashCam();
 				traceroute.stopRecording();
-				String version = "Mod Version: " + main.VERSION + "\n";
+				String version = "Mod Version: " + Main.VERSION + "\n";
 				String name = "User: " + main.getUserName() + "\n";
 				String ip = "IP: " + main.getServerIP() + "\n";
 				String uptime = "Uptime: " + main.getUptimeMinutes() + " min\n";
@@ -33,7 +33,7 @@ public class ConnectionExceptionEvent extends Event {
 						+ trList.size();
 				System.out.println("[Coppershark]\n" + message);
 				main.sendToWebhook(message, Connection.BAD);
-			};
+			}
 		}.start();
 	}
 

@@ -1,15 +1,10 @@
 package me.coppershark.event;
 
-import java.util.ArrayList;
-
 import me.coppershark.main.Main;
 import me.coppershark.main.Main.Connection;
 import me.coppershark.util.TraceRoute;
 import me.coppershark.util.TraceRouteDashCam;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ServerData;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 
 public class DisconnectEvent extends Event {
@@ -23,7 +18,7 @@ public class DisconnectEvent extends Event {
 					return;
 				TraceRouteDashCam traceroute = main.getTraceRouteDashCam();
 				traceroute.stopRecording();
-				String version = "Mod Version: " + main.VERSION + "\n";
+				String version = "Mod Version: " + Main.VERSION + "\n";
 				String name = "User: " + main.getUserName() + "\n";
 				String ip = "IP: " + main.getServerIP() + "\n";
 				if (main.getUptimeMinutes() < 40)
@@ -39,7 +34,7 @@ public class DisconnectEvent extends Event {
 						+ traceroute.getTraceroutes().size();
 				System.out.println("[Coppershark]\n" + message);
 				main.sendToWebhook(message, Connection.GOOD);
-			};
+			}
 		}.start();
 	}
 

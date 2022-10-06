@@ -52,7 +52,7 @@ public class IPAddress {
 	 * Gets the time distance from the disconnectTime to this tracert IP address
 	 * from the past. Records from the future (POV disconnectTime) return a negative
 	 * value
-	 * 
+	 *
 	 * @param disconnectTime - time the disconnect happened
 	 * @return
 	 */

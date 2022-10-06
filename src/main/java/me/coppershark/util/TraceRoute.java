@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.function.Consumer;
 
 public class TraceRoute {
@@ -13,24 +11,17 @@ public class TraceRoute {
 
 	private long timestamp_start;
 	private long timestamp_end;
-	private IPAddress serverIP;
+	private String serverIP;
 	private ArrayList<IPAddress> route;
 
-	public TraceRoute() {
-		this.timestamp_start = System.currentTimeMillis();
-		this.timestamp_end = System.currentTimeMillis();
-		route = new ArrayList<IPAddress>();
-		serverIP = null;
-	}
-
-	public TraceRoute(ArrayList<IPAddress> tracert, long timestamp_start) {
+	private TraceRoute(String serverIP, ArrayList<IPAddress> tracert, long timestamp_start) {
+		this.serverIP = serverIP;
 		this.timestamp_start = timestamp_start;
 		this.timestamp_end = System.currentTimeMillis();
 		route = tracert;
-		serverIP = route.size() > 0 ? route.get(route.size() - 1) : null;
 	}
 
-	public TraceRoute(IPAddress serverIP, IPAddress[] tracert, long timestamp_start, long timestamp_end) {
+	public TraceRoute(String serverIP, IPAddress[] tracert, long timestamp_start, long timestamp_end) {
 		this.timestamp_start = timestamp_start;
 		this.timestamp_end = timestamp_end;
 		route = new ArrayList<IPAddress>();
@@ -51,7 +42,7 @@ public class TraceRoute {
 		return timestamp_end;
 	}
 
-	public IPAddress getServerIP() {
+	public String getServerIP() {
 		return serverIP;
 	}
 
@@ -111,7 +102,7 @@ public class TraceRoute {
 		} catch (IOException e) {
 			return null;
 		}
-		return new TraceRoute(route, timestamp_start);
+		return new TraceRoute(serverIP, route, timestamp_start);
 	}
 
 	private static boolean isPrivateV4Address(String ip) {

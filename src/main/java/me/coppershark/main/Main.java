@@ -6,7 +6,6 @@ import me.coppershark.command.CopperSharkCommand;
 import me.coppershark.eventhandler.ConnectionExceptionEventHandler;
 import me.coppershark.util.DiscordWebhook;
 import me.coppershark.util.Settings;
-import me.coppershark.util.TraceRoute;
 import me.coppershark.util.TraceRouteDashCam;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.NetworkManager;
@@ -20,7 +19,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = Main.MODID, version = Main.VERSION)
 public class Main {
 	public static final String MODID = "coppershark";
-	public static final String VERSION = "3.0.10";
+	public static final String VERSION = "3.0.11";
 
 	private byte[] tokenBadConnection = { 71, 107, 98, 52, 55, 99, 97, 72, 69, 78, 81, 107, 72, 56, 110, 51, 102, 78,
 			107, 113, 114, 112, 83, 81, 116, 114, 68, 89, 50, 120, 85, 115, 115, 98, 121, 122, 122, 100, 101, 68, 99,
@@ -42,7 +41,7 @@ public class Main {
 
 	public enum Connection {
 		GOOD, BAD
-	};
+	}
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
