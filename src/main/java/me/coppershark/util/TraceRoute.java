@@ -91,7 +91,7 @@ public class TraceRoute {
 				public void accept(String l) {
 					if (l.matches(" [0-9 ]{2}([0-9 \\*<]{6} (ms|  )){3}  [^ ]*( \\[[^ ]*\\])? ?")) {
 						IPAddress address = new IPAddress(l);
-						if ((previousAddress == null || !previousAddress.equals(address)) && address.getHopNumber() > 1
+						if ((previousAddress == null || !previousAddress.equals(address)) && address.getHopNumber() > 0
 								&& !isPrivateV4Address(address.getIp())) {
 							route.add(address);
 							previousAddress = address;
